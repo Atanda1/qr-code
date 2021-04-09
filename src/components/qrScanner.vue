@@ -46,6 +46,9 @@ export default {
           video: {
             width: { min: 80 },
             height: { min: 50 },
+            facingMode: {
+              exact: 'environment'
+            }
           },
         };
         navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
