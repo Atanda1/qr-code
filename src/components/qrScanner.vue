@@ -80,7 +80,7 @@ export default {
          //this.tick();
          const qrScanner = new QrScanner(video, result => console.log('decoded qr code:', result));
           qrScanner.start();
-          setTimeout(qrScanner.stop(), 4000)
+          setTimeout(qrScanner.stop(), 6000)
       }
     },
     
