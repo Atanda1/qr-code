@@ -26,7 +26,7 @@ export default {
     return {
       scanning: false,
       qrcode: null,
-      qrScanResult: false,
+      qrScanResult: true,
       result: "",
       image: true,
       videourl: "",
@@ -78,7 +78,10 @@ export default {
           
         // });
          //this.tick();
-         const qrScanner = new QrScanner(video, result => console.log('decoded qr code:', result));
+         const qrScanner = new QrScanner(video, result => {
+           console.log('decoded qr code:', result);
+           this.result = result
+         })
           qrScanner.start();
           setTimeout(qrScanner.stop(), 6000)
       }
