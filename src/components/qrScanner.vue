@@ -7,7 +7,7 @@
 
     <canvas v-if="scanning" ref="qr-canvas"></canvas>
     <img class="arrow" src="../assets/arrow-up.png" />
-    <h3>Click the bar-code to scan</h3>
+    <h3>Scan above</h3>
     <div ref="result" v-if="qrScanResult">
       <b>Data:</b> <span id="outputData">{{ result }}</span>
     </div>
