@@ -5,7 +5,7 @@
     </div>
    
 
-    <canvas v-if="scanning" ref="qr-canvas"></canvas>
+    <canvas v-if="scanning" ref="canvas"></canvas>
     <img class="arrow" src="../assets/arrow-up.png" />
     <h3>Scan above</h3>
     <div ref="result" v-if="qrScanResult">
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import QrScanner from 'qr-scanner'
+
 export default {
   name: "HelloWorld",
   props: {
@@ -31,6 +33,15 @@ export default {
     };
   },
   methods: {
+    tick() {
+      const canvasElement = this.$refs.canvas.getContext('2d');
+      const video = this.$refs.video;
+      canvasElement.height = video.videoHeight;
+      canvasElement.width = video.videoWidth;
+      //canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+      this.scanning = true && requestAnimationFrame(this.tick());
+    },
     scan() {
       if (
         "mediaDevices" in navigator &&
@@ -42,42 +53,36 @@ export default {
         // const video = document.querySelector("video");
         // console.log(video);
         // this.qrScanResult = true;
-        let constraints = {
-          video: {
-            width: { min: 80 },
-            height: { min: 50 },
-            facingMode: {
-              exact: 'environment'
-            }
-          },
-        };
-        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-          console.log(stream);
-          const video = document.querySelector('video');
-          //self.scanning = true;
-          //self.qrScanResult = true;
-          //btnScanQR.hidden = true;
-          //canvasElement.hidden = false;
-          // const video = this.$refs.video;
-          video.srcObject = stream;
-          video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+        // let constraints = {
+        //   video: {
+        //     width: { min: 80 },
+        //     height: { min: 50 },
+        //     // facingMode: {
+        //     //   exact: 'environment'
+        //     // }
+        //   },
+        // };
+        // navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+        //   console.log(stream);
+           const video = document.querySelector('video');
+        //   //self.scanning = true;
+        //   //self.qrScanResult = true;
+        //   //btnScanQR.hidden = true;
+        //   //canvasElement.hidden = false;
+        //   // const video = this.$refs.video;
+        //   video.srcObject = stream;
+        //   video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
 
-          video.play();
-          // this.tick();
-          // this.theScan();
-        });
+        //   video.play();
+         
+          
+        // });
+         //this.tick();
+         const qrScanner = new QrScanner(video, result => console.log('decoded qr code:', result));
+          qrScanner.start();
       }
     },
-    tick() {
-      const canvasElement = this.$refs.qr - canvas;
-      const canvas = canvasElement.getContext("2d");
-      const video = this.$refs.video;
-      canvasElement.height = video.videoHeight;
-      canvasElement.width = video.videoWidth;
-      canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-
-      this.scanning = true && requestAnimationFrame(this.tick());
-    },
+    
     theScan() {
       try {
         this.qrcode.decode();
@@ -104,11 +109,11 @@ export default {
     },
   },
   beforeMount: function () {
-		this.scan();
+		console.log(window.qrcode);
+    this.qrcode = window.qrcode;
 	},
   mounted() {
-    console.log(window.qrcode);
-    this.qrcode = window.qrcode;
+    this.scan();
 
     // const canvasElement = this.$refs.qr-canvas;
     // const canvas = canvasElement.getContext("2d");
